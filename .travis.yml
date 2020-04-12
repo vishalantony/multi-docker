@@ -1,17 +1,18 @@
 sudo: required
+language: generic
 services:
     - docker
 before_install:
-    - docker build -t viantony/multi-docker-client-test -f ./client/Dockerfile.dev ./client
+    - docker build -t $DOCKER_ID/multi-docker-client-test -f ./client/Dockerfile.dev ./client
 script:
-    - docker run -e CI=true viantony/multi-docker-client-test npm test --coverage
+    - docker run -e CI=true $DOCKER_ID/multi-docker-client-test npm test --coverage
 after_success:
-    - docker build -t viantony/multi-docker-client ./client
-    - docker build -t viantony/multi-docker-nginx ./nginx
-    - docker build -t viantony/multi-docker-server ./server
-    - docker build -t viantony/multi-docker-worker ./worker
+    - docker build -t $DOCKER_ID/multi-docker-client ./client
+    - docker build -t $DOCKER_ID/multi-docker-nginx ./nginx
+    - docker build -t $DOCKER_ID/multi-docker-server ./server
+    - docker build -t $DOCKER_ID/multi-docker-worker ./worker
     - echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin
-    - docker push viantony/multi-docker-client
-    - docker push viantony/multi-docker-server
-    - docker push viantony/multi-docker-nginx
-    - docker push viantony/multi-docker-worker
+    - docker push $DOCKER_ID/multi-docker-client
+    - docker push $DOCKER_ID/multi-docker-server
+    - docker push $DOCKER_ID/multi-docker-nginx
+    - docker push $DOCKER_ID/multi-docker-worker
